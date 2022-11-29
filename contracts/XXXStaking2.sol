@@ -12,7 +12,7 @@ error RewardOverLimit();
 
 contract XXXStaking2 is ReentrancyGuard {
 
-    uint256 public constant maxEarnedValue = 100000000 * 1e18;
+    uint256 public constant maxEarnedValue = 10000000 * 1e18;
     uint256 public totalClaimedReward = 0;
 
     IERC20 public s_rewardsToken;
