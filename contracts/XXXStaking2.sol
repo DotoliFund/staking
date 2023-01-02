@@ -22,7 +22,7 @@ contract XXXStaking2 is ReentrancyGuard {
     // Which will be multiplied by the tokens the user staked divided by the total
     // This ensures a steady reward rate of the platform
     // So the more users stake, the less for everyone who is staking.
-    uint256 public constant REWARD_RATE = 500;
+    uint256 public constant REWARD_RATE = 20000000;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
 
@@ -57,6 +57,9 @@ contract XXXStaking2 is ReentrancyGuard {
      * @notice How much reward a user has earned
      */
     function earned(address account) public view returns (uint256) {
+        if (totalClaimedReward >= maxEarnedValue) {
+            return 0;
+        }
         return
             ((s_balances[account] * (rewardPerToken() - s_userRewardPerTokenPaid[account])) 
                 / 1e4) + s_rewards[account];
@@ -70,8 +73,8 @@ contract XXXStaking2 is ReentrancyGuard {
         external
         updateReward(msg.sender)
         nonReentrant
-        moreThanZero(amount)
     {
+        require(amount > 0, 'ZERO');
         s_totalSupply += amount;
         s_balances[msg.sender] += amount;
         emit Staked(msg.sender, amount);
@@ -102,17 +105,16 @@ contract XXXStaking2 is ReentrancyGuard {
     /**
      * @notice User claims their tokens
      */
-    function claimReward() 
+    function claimReward(uint256 amount) 
         external
         updateReward(msg.sender)
         nonReentrant
-        claimRewardLimit(msg.sender)
     {
-        uint256 reward = s_rewards[msg.sender];
-        s_rewards[msg.sender] = 0;
-        totalClaimedReward += reward;
-        emit RewardsClaimed(msg.sender, reward);
-        bool success = s_rewardsToken.transfer(msg.sender, reward);
+        require(totalClaimedReward + amount < maxEarnedValue, 'LIMIT');
+        s_rewards[msg.sender] -= amount;
+        totalClaimedReward += amount;
+        emit RewardsClaimed(msg.sender, amount);
+        bool success = s_rewardsToken.transfer(msg.sender, amount);
         if (!success) {
             revert TransferFailed();
         }
@@ -126,21 +128,6 @@ contract XXXStaking2 is ReentrancyGuard {
         s_lastUpdateTime = block.timestamp;
         s_rewards[account] = earned(account);
         s_userRewardPerTokenPaid[account] = s_rewardPerTokenStored;
-        _;
-    }
-
-    modifier moreThanZero(uint256 amount) {
-        if (amount == 0) {
-            revert NeedsMoreThanZero();
-        }
-        _;
-    }
-
-    modifier claimRewardLimit(address account) {
-        uint256 reward = s_rewards[msg.sender];
-        if (totalClaimedReward + reward > maxEarnedValue) {
-            revert RewardOverLimit();
-        }
         _;
     }
 
