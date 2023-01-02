@@ -110,7 +110,7 @@ contract XXXStaking2 is ReentrancyGuard {
         updateReward(msg.sender)
         nonReentrant
     {
-        require(totalClaimedReward + amount < maxEarnedValue, 'LIMIT');
+        require(totalClaimedReward <= maxEarnedValue, 'LIMIT');
         s_rewards[msg.sender] -= amount;
         totalClaimedReward += amount;
         emit RewardsClaimed(msg.sender, amount);
