@@ -4,13 +4,13 @@ pragma solidity =0.8.4;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import './interfaces/IXXXStaking2.sol';
+import './interfaces/IDotoliStaking.sol';
 
 error TransferFailed();
 error NeedsMoreThanZero();
 error RewardOverLimit();
 
-contract XXXStaking2 is ReentrancyGuard {
+contract DotoliStaking is ReentrancyGuard {
 
     uint256 public constant maxReward = 10000001 * 1e18;
     uint256 public constant stopRewardAt = 10000000 * 1e18;
@@ -23,7 +23,7 @@ contract XXXStaking2 is ReentrancyGuard {
     // Which will be multiplied by the tokens the user staked divided by the total
     // This ensures a steady reward rate of the platform
     // So the more users stake, the less for everyone who is staking.
-    uint256 public constant REWARD_RATE = 200;
+    uint256 public constant REWARD_RATE = 20000000;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
 

@@ -1,5 +1,5 @@
 {
-  "name": "xxxstaking",
+  "name": "DotoliStaking",
   "description": "Smart contracts for Open Fund staking",
   "license": "GPL-2.0-or-later",
   "publishConfig": {
@@ -8,9 +8,9 @@
   "version": "0.0.1",
   "homepage": "https://uniswap.org",
   "keywords": [
-    "xxxstaking",
+    "DotoliStaking",
     "openfund",
-    "staking"
+    "dotoli"
   ],
   "repository": {
     "type": "git",

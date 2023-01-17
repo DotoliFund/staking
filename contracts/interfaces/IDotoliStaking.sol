@@ -2,7 +2,7 @@
 // Inspired by https://github.com/smartcontractkit/defi-minimal
 pragma solidity =0.8.4;
 
-interface IXXXStaking2 {
+interface IDotoliStaking {
 
     function rewardPerToken() external view returns (uint256);
     function earned(address account) external view returns (uint256);
