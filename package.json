@@ -1,20 +1,20 @@
 {
-  "name": "DotoliStaking",
-  "description": "Smart contracts for Open Fund staking",
+  "name": "@dotolifund/staking",
+  "description": "Smart contracts for Dotoli token staking",
   "license": "GPL-2.0-or-later",
   "publishConfig": {
     "access": "public"
   },
   "version": "0.0.1",
-  "homepage": "https://uniswap.org",
+  "homepage": "https://dotoli.org",
   "keywords": [
-    "DotoliStaking",
-    "openfund",
-    "dotoli"
+    "staking",
+    "dotoli",
+    "DotoliFund"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fundDeveloper22/staking"
+    "url": "https://github.com/DotoliFund/staking"
   },
   "files": [
     "contracts/interfaces",
