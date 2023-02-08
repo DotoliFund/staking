@@ -23,7 +23,7 @@ contract DotoliStaking is ReentrancyGuard {
     // Which will be multiplied by the tokens the user staked divided by the total
     // This ensures a steady reward rate of the platform
     // So the more users stake, the less for everyone who is staking.
-    uint256 public constant REWARD_RATE = 20000000;
+    uint256 public constant REWARD_RATE = 100;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
 

@@ -5,12 +5,12 @@ async function main() {
   const [test_account_1] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", test_account_1.address);
   console.log("Account balance:", (await test_account_1.getBalance()).toString());
-  const DotoliTokenAddress = '0x5D8aa1475Fb7A56229fafcB4e7F2B31264dc0C11';
+  const DotoliTokenAddress = '0x73860D5Df254461cB325A66AB2367eB51a8EeB33';
 
   const DotoliStaking = await ethers.getContractFactory("DotoliStaking");
   const staking = await DotoliStaking.deploy(DotoliTokenAddress, DotoliTokenAddress);
   await staking.deployed();
-  console.log("DotoliStaking address : ", staking2.address);
+  console.log("DotoliStaking address : ", staking.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
