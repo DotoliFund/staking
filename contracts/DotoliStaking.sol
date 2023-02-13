@@ -12,8 +12,7 @@ error RewardOverLimit();
 
 contract DotoliStaking is ReentrancyGuard {
 
-    uint256 public constant maxReward = 10000001 * 1e18;
-    uint256 public constant stopRewardAt = 10000000 * 1e18;
+    uint256 public constant maxReward = 10000000 * 1e18;
     uint256 public totalClaimedReward = 0;
 
     IERC20 public s_rewardsToken;
@@ -23,7 +22,7 @@ contract DotoliStaking is ReentrancyGuard {
     // Which will be multiplied by the tokens the user staked divided by the total
     // This ensures a steady reward rate of the platform
     // So the more users stake, the less for everyone who is staking.
-    uint256 public constant REWARD_RATE = 100;
+    uint256 public constant REWARD_RATE = 1000000;
     uint256 public s_lastUpdateTime;
     uint256 public s_rewardPerTokenStored;
 
@@ -45,7 +44,7 @@ contract DotoliStaking is ReentrancyGuard {
     modifier updateReward(address account) {
         s_rewardPerTokenStored = rewardPerToken();
         s_lastUpdateTime = block.timestamp;
-        s_rewards[account] = earned(account);
+        s_rewards[account] = reward(account);
         s_userRewardPerTokenPaid[account] = s_rewardPerTokenStored;
         _;
     }
@@ -59,13 +58,16 @@ contract DotoliStaking is ReentrancyGuard {
             (((block.timestamp - s_lastUpdateTime) * REWARD_RATE * 1e18) / s_totalStakedSupply);
     }
 
-    function earned(address account) public view returns (uint256) {
-        if (totalClaimedReward >= stopRewardAt) {
-            return 0;
+    function reward(address account) public view returns (uint256) {
+        uint256 reward = ((s_balances[account] * (rewardPerToken() - s_userRewardPerTokenPaid[account])) 
+            / 1e4) + s_rewards[account];
+
+        uint256 remainReward = s_rewardsToken.balanceOf(address(this));
+        if (reward >= remainReward) {
+            return remainReward;
+        } else {
+            return reward;
         }
-        return
-            ((s_balances[account] * (rewardPerToken() - s_userRewardPerTokenPaid[account])) 
-                / 1e4) + s_rewards[account];
     }
 
     function stake(uint256 amount)
@@ -103,7 +105,8 @@ contract DotoliStaking is ReentrancyGuard {
         updateReward(msg.sender)
         nonReentrant
     {
-        require(amount <= maxReward - totalClaimedReward, 'LIMIT');
+        uint256 afterGetReward = amount + totalClaimedReward;
+        require(afterGetReward <= maxReward, 'LIMIT');
         s_rewards[msg.sender] -= amount;
         totalClaimedReward += amount;
         emit RewardsClaimed(msg.sender, amount);
