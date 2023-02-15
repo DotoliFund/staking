@@ -5,7 +5,7 @@ async function main() {
   const [test_account_1] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", test_account_1.address);
   console.log("Account balance:", (await test_account_1.getBalance()).toString());
-  const DotoliTokenAddress = '0xaf75db6618d2955Db5580160958FC667a4a2Aa46';
+  const DotoliTokenAddress = '0x52904e0B1454B8b1afC29B9A10AD2161ac454257';
 
   const DotoliStaking = await ethers.getContractFactory("DotoliStaking");
   const staking = await DotoliStaking.deploy(DotoliTokenAddress, DotoliTokenAddress);
